@@ -816,6 +816,10 @@ static int input_read( output_buf, interactive )
          */
         if (interactive)
         {
+            /* Print a bell on each prompt, to notify the user that
+             * long-running queries are done. */
+            fputc('\a', stdout);
+
             if (!is_continued)
             {
                 env_get( g_env, "prompt", &prompt );
