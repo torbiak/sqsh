@@ -38,7 +38,7 @@ static char RCS_Id[] = "$Id: dsp_bcp.c,v 1.2 2004/04/11 15:14:32 mpeppler Exp $"
 USE(RCS_Id)
 #endif /* !defined(lint) */
 
-static void dsp_col _ANSI_ARGS(( dsp_out_t*, char*, int ));
+static void dsp_col _ANSI_ARGS(( dsp_out_t*, dsp_col_t ));
 
 /*
  * dsp_bcp:
@@ -119,13 +119,11 @@ int dsp_bcp( output, cmd, flags )
 					{
 						if (desc->d_cols[i].c_nullind == 0)
 						{
-							dsp_col( output, 
-										desc->d_cols[i].c_data,
-										strlen( desc->d_cols[i].c_data ) );
+							dsp_col( output, desc->d_cols[i] );
 						}
 						else
 						{
-							dsp_col( output, "", 0 );
+							/* NULL, so don't output anything. */
 						}
 
 						if (i < (desc->d_ncols-1))
@@ -164,12 +162,14 @@ int dsp_bcp( output, cmd, flags )
  * dsp_col():
  *
  */
-static void dsp_col( output, col_value, col_width )
+static void dsp_col( output, col )
 	dsp_out_t *output;
-	char      *col_value;
-	int        col_width;
+	dsp_col_t col;
 {
 	char    *end;
+	char *col_value = col.c_data;
+	int col_width = strlen( col.c_data );
+
 
 	if (col_width > 0)
 	{
@@ -185,6 +185,11 @@ static void dsp_col( output, col_value, col_width )
 				--end);
 		}
 
+		if (col.c_format.datatype == CS_FLOAT_TYPE || col.c_format.datatype == CS_REAL_TYPE)
+		{
+			while (*col_value == ' ')
+				col_value++;
+		}
 		for (; col_value <= end; ++col_value)
 			dsp_fputc( *col_value, output );
 	}

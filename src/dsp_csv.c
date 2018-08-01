@@ -38,7 +38,7 @@ static char RCS_Id[] = "$Id: dsp_csv.c,v 1.3 2014/08/05 15:54:38 mwesdorp Exp $"
 USE(RCS_Id)
 #endif /* !defined(lint) */
 
-    static void dsp_col _ANSI_ARGS(( dsp_out_t*, char*, int, int ));
+    static void dsp_col _ANSI_ARGS(( dsp_out_t*, dsp_col_t ));
 
 /*
  * dsp_csv:
@@ -135,10 +135,7 @@ int dsp_csv( output, cmd, flags )
 		{
 		    if (desc->d_cols[i].c_nullind == 0)
 		    {
-			dsp_col( output,
-				 desc->d_cols[i].c_data,
-				 strlen( desc->d_cols[i].c_data ),
-                                 desc->d_cols[i].c_is_int_type );
+			dsp_col( output, desc->d_cols[i] );
 		    }
 		    else
 		    {
@@ -181,12 +178,14 @@ int dsp_csv( output, cmd, flags )
  * dsp_col():
  *
  */
-static void dsp_col( output, col_value, col_width, col_int_type )
+static void dsp_col( output, col )
     dsp_out_t *output;
-    char      *col_value;
-    int        col_width;
-    int        col_int_type;
+    dsp_col_t col;
 {
+
+	char *col_value = col.c_data;
+	int col_width = strlen( col.c_data );
+
     char    *end;
 
     if (col_width > 0)
@@ -201,17 +200,22 @@ static void dsp_col( output, col_value, col_width, col_int_type )
 	    for (; end > col_value && (*end == '\0' || isspace((int)*end));
 		 --end);
 	}
+	if (col.c_format.datatype == CS_FLOAT_TYPE || col.c_format.datatype == CS_REAL_TYPE)
+	{
+		while (*col_value == ' ')
+			col_value++;
+	}
 
-        if (col_int_type == False)
+        if (col.c_is_int_type == False)
             dsp_fputc('"', output);
         for (; col_value <= end; ++col_value)
         {
             /* sqsh-2.1.9 - Bug fix 3525302 */
-            if (col_int_type == False && *col_value == '"')
+            if (col.c_is_int_type == False && *col_value == '"')
                 dsp_fputc('"', output);
             dsp_fputc( *col_value, output );
         }
-        if (col_int_type == False)
+        if (col.c_is_int_type == False)
             dsp_fputc('"', output);
     }
 
