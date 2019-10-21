@@ -80,6 +80,13 @@ int funcset_add( fs, func_name, func_body )
 	if ((f = func_create( func_name, func_body )) == NULL)
 		return False;
 
+	/*-- Remove any existing function with the same name --*/
+	func_t *existing = funcset_get(fs, func_name);
+	if (existing != NULL) {
+		if (avl_delete(fs->fs_funcs, (void*)existing) == False)
+			return False;
+	}
+
 	/*-- And stick it in the tree --*/
 	if (avl_insert( fs->fs_funcs, (void*)f ) == False)
 		return False;
