@@ -560,6 +560,60 @@ int var_get_bcp_rowsep( env, var_name, var_value )
 	return True ;
 }
 
+int var_set_bcp_header( env, var_name, var_value )
+	env_t    *env;
+	char     *var_name;
+	char     **var_value;
+{
+	int bcp_header;
+
+	if (var_set_bool( env, var_name, var_value ) == False)
+	{
+		return False;
+	}
+
+	if (strcmp(*var_value , "1") == 0)
+	{
+		bcp_header = True;
+	}
+	else
+	{
+		bcp_header = False;
+	}
+
+	if (dsp_prop( DSP_SET, DSP_BCP_HEADER, (void*)&bcp_header, DSP_UNUSED ) != DSP_SUCCEED)
+	{
+		return False;
+	}
+
+	DBG(sqsh_debug(DEBUG_SCREEN,"var_set_bcp_header: BCP header now set to %s\n", *var_value);)
+
+	return True ;
+}
+
+int var_get_bcp_header( env, var_name, var_value )
+	env_t    *env;
+	char     *var_name;
+	char     **var_value;
+{
+	int bcp_header;
+
+	if (dsp_prop( DSP_GET, DSP_BCP_HEADER, (void*)&bcp_header, DSP_UNUSED ) != DSP_SUCCEED)
+	{
+		return False;
+	}
+
+	if (bcp_header == True)
+	{
+		*var_value = "1";
+	}
+	else
+	{
+		*var_value = "0";
+	}
+	return True ;
+}
+
 int var_set_bcp_trim( env, var_name, var_value )
 	env_t    *env;
 	char     *var_name;

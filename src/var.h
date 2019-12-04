@@ -60,6 +60,7 @@ int var_set_fltfmt          _ANSI_ARGS(( env_t*, char*, char** )) ;
 int var_set_bcp_colsep      _ANSI_ARGS(( env_t*, char*, char** )) ;
 int var_set_bcp_rowsep      _ANSI_ARGS(( env_t*, char*, char** )) ;
 int var_set_bcp_trim        _ANSI_ARGS(( env_t*, char*, char** )) ;
+int var_set_bcp_header      _ANSI_ARGS(( env_t*, char*, char** )) ;
 int var_set_maxlen          _ANSI_ARGS(( env_t*, char*, char** )) ;
 int var_set_datefmt         _ANSI_ARGS(( env_t*, char*, char** )) ;
 int var_set_timefmt         _ANSI_ARGS(( env_t*, char*, char** )) ;
@@ -82,6 +83,7 @@ int var_get_datetime        _ANSI_ARGS(( env_t*, char*, char** )) ;
 int var_get_bcp_colsep      _ANSI_ARGS(( env_t*, char*, char** )) ;
 int var_get_bcp_rowsep      _ANSI_ARGS(( env_t*, char*, char** )) ;
 int var_get_bcp_trim        _ANSI_ARGS(( env_t*, char*, char** )) ;
+int var_get_bcp_header      _ANSI_ARGS(( env_t*, char*, char** )) ;
 int var_get_interactive     _ANSI_ARGS(( env_t*, char*, char** )) ;
 int var_get_maxlen          _ANSI_ARGS(( env_t*, char*, char** )) ;
 int var_get_datefmt         _ANSI_ARGS(( env_t*, char*, char** )) ;
@@ -111,6 +113,7 @@ static var_entry_t  sg_var_entry[] = {
     { "batch_pause",      "0",           var_set_bool,        NULL            },
     { "bcp_colsep",       "|",           var_set_bcp_colsep, var_get_bcp_colsep},
     { "bcp_rowsep",       "|",           var_set_bcp_rowsep, var_get_bcp_rowsep},
+    { "bcp_header",       "0",           var_set_bcp_header, var_get_bcp_header},
     { "bcp_trim",         "1",           var_set_bcp_trim,    var_get_bcp_trim},
     { "chained",          NULL,          var_set_bool,        NULL            },
     { "charset",          NULL,          var_set_nullstr,     NULL            },

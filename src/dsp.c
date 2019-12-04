@@ -72,6 +72,7 @@ dsp_prop_t  g_dsp_props = {
 	1,               /* p_bcp_colsep_len */
 	"|",             /* p_bcp_rowsep */
 	1,               /* p_bcp_rowsep_len */
+	0,               /* p_bcp_header */
 	1,               /* p_bcp_trim */
 	32768,           /* p_maxlen */
 	",",             /* p_csv_colsep */
@@ -523,6 +524,21 @@ static int dsp_prop_set( prop, ptr, len )
 
 			break;
 
+		case DSP_BCP_HEADER:
+			DBG(sqsh_debug(DEBUG_DISPLAY,
+				"dsp_prop: dsp_prop(DSP_SET, DSP_BCP_HEADER, '%d')\n",
+				(ptr == NULL)?-1:*((int*)ptr));)
+
+			if (*((int*)ptr) == 0)
+			{
+				g_dsp_props.p_bcp_header = False;
+			}
+			else
+			{
+				g_dsp_props.p_bcp_header = True;
+			}
+			break;
+
 		case DSP_BCP_TRIM:
 			DBG(sqsh_debug(DEBUG_DISPLAY,
 				"dsp_prop: dsp_prop(DSP_SET, DSP_BCP_TRIM, '%d')\n",
@@ -780,6 +796,14 @@ static int dsp_prop_get( prop, ptr, len )
 				g_dsp_props.p_bcp_rowsep);)
 
 			strncpy( (char*)ptr, g_dsp_props.p_bcp_rowsep, len );
+			break;
+
+		case DSP_BCP_HEADER:
+			DBG(sqsh_debug(DEBUG_DISPLAY,
+				"dsp_prop: dsp_prop(DSP_GET, DSP_BCP_HEADER) = %d\n",
+				g_dsp_props.p_bcp_header);)
+
+			*((int*)ptr) = g_dsp_props.p_bcp_header;
 			break;
 
 		case DSP_BCP_TRIM:

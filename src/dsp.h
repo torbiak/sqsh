@@ -148,11 +148,12 @@ extern int g_dsp_interrupted;
 #define DSP_COLSEP        12
 #define DSP_BCP_COLSEP    13
 #define DSP_BCP_ROWSEP    14
-#define DSP_BCP_TRIM      15
-#define DSP_LINESEP       16
-#define DSP_XGEOM         17
-#define DSP_MAXLEN        18
-#define DSP_CSV_NULLIND   19
+#define DSP_BCP_HEADER    15
+#define DSP_BCP_TRIM      16
+#define DSP_LINESEP       17
+#define DSP_XGEOM         18
+#define DSP_MAXLEN        19
+#define DSP_CSV_NULLIND   20
 #define DSP_VALID_PROP(p) ((p) >= DSP_DATETIMEFMT && (p) <= DSP_CSV_NULLIND)
 
 /*-- Length for dsp_prop() --*/
@@ -224,6 +225,7 @@ typedef struct dsp_prop_st {
 	int     p_bcp_colsep_len;            /* Display len of bcp column separator */
 	char    p_bcp_rowsep[MAX_SEPLEN+1];  /* Current bcp row separator */
 	int     p_bcp_rowsep_len;            /* Display len of bcp row separator */
+	int     p_bcp_header;                /* True/False: Show header in bcp? */
 	int     p_bcp_trim;                  /* True/False: Trim spaces in bcp? */
 	int     p_maxlen;                    /* Maximum column width we will accept */
 	char    p_csv_colsep[MAX_SEPLEN+1];  /* Current csv column separator */

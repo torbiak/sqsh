@@ -58,6 +58,7 @@ int dsp_bcp( output, cmd, flags )
 	CS_INT       ret;          /* ct_results return code */
 	CS_INT       nrows;        /* Number of rows fetch */
 	dsp_desc_t  *desc;         /* Result set description */
+	dsp_col_t   *col;
 
 	/*
 	 * Start blasting through result sets...
@@ -106,6 +107,23 @@ int dsp_bcp( output, cmd, flags )
 
 				if (desc == NULL)
 					return DSP_FAIL;
+
+				/* Display header, maybe */
+				if (g_dsp_props.p_bcp_header) {
+					for (i = 0; i < desc->d_ncols; i++) {
+						col = &desc->d_cols[i];
+						if (col->c_format.namelen > 0) {
+							dsp_fputs( col->c_format.name, output );
+						} else {
+							dsp_fprintf(output, "col%d", i + 1);
+						}
+						if (i < desc->d_ncols - 1) {
+							dsp_fputs(g_dsp_props.p_bcp_colsep, output );
+						}
+					}
+					dsp_fputs(g_dsp_props.p_bcp_rowsep, output );
+					dsp_fputs("\n", output );
+				}
 				
 				while ((ret = dsp_desc_fetch( cmd, desc )) == CS_SUCCEED)
 				{

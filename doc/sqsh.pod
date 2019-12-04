@@ -2480,6 +2480,11 @@ configuration variable and the B<-m> option to the B<\go> command). Note that, a
 newline ("\n") is automatically appended and should not be supplied.
 The default setting is "|".
 
+=item bcp_header (boolean)
+
+Controls whether or not a header is printed with BCP style output. The default
+is "False".
+
 =item bcp_trim (boolean)
 
 Controls whether or not BCP style output trims trailing spaces from fixed length
