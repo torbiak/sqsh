@@ -566,14 +566,15 @@ int cmd_go( argc, argv )
 
 	} /* while trasactions remain */
 
-	if( show_stats ) 
+	if( show_stats )
 	{
 		if( iterations > 1 )
 			printf( "%d xact%s:\n", iterations, (iterations > 1) ? "s" : "" );
 
-		printf(
+		fprintf(
+			stderr,
 			"Clock Time (sec.): Total = %.3f  Avg = %.3f (%4.2f xacts per sec.)\n",
-			total_runtime, 
+			total_runtime,
 			(total_runtime / (double)iterations),
 			((double)1.0) / (total_runtime / (double)iterations));
 	}
