@@ -1,6 +1,6 @@
 =head1 NAME
 
-sqsh - Interactive database shell (version 2.5)
+sqsh - Interactive database shell (version 3.0)
 
 =head1 SYNOPSIS
 
