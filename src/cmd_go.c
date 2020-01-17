@@ -90,6 +90,7 @@ int cmd_go( argc, argv )
 	int               i;
 	int               return_code;
 	int               show_stats    = False;
+	FILE             *stats_stream  = stdout;
 	int               iterations    = 1;
 	int               sleep_time    = 0;
 	int               xact          = 0;
@@ -122,9 +123,9 @@ int cmd_go( argc, argv )
 		fprintf( stderr, "\\go: Unbalanced comment tokens encountered\n" );
 		have_error = True;
 	}
-	else while ((ch = sqsh_getopt( argc, argv, "nfhps:m:x;w:d:t;T:el" )) != EOF) 
+	else while ((ch = sqsh_getopt( argc, argv, "nfhp:s:m:x;w:d:t;T:el" )) != EOF)
 	{
-		switch (ch) 
+		switch (ch)
 		{
 			case 't' :
 				if (env_put( g_env, "filter", "1", ENV_F_TRAN ) == False)
@@ -196,7 +197,19 @@ int cmd_go( argc, argv )
 				dsp_flags |= DSP_F_NOHEADERS;
 				break;
 			case 'p' :
-				show_stats = True;
+				if (strcmp(sqsh_optarg, "err") == 0) {
+					show_stats = True;
+					stats_stream = stderr;
+				} else if (strcmp(sqsh_optarg, "out") == 0) {
+					show_stats = True;
+					stats_stream = stdout;
+				} else if (strcmp(sqsh_optarg, "none") == 0) {
+					show_stats = False;
+					stats_stream = NULL;
+				} else {
+					fprintf(stderr, "\\go: -p: Invalid stream: %s\n", sqsh_optarg);
+					have_error = True;
+				}
 				break;
 			case 's' :
 				sleep_time = atoi(sqsh_optarg);
@@ -227,10 +240,10 @@ int cmd_go( argc, argv )
 	 * If there are any errors on the command line, or there are
 	 * any options left over then we have an error.
 	 */
-	if( (argc - sqsh_optind) > 1 || have_error) 
+	if( (argc - sqsh_optind) > 1 || have_error)
 	{
-	    fprintf( stderr, 
-		"Use: \\go [-d display] [-e] [-h] [-f] [-l] [-n] [-p] [-m mode] [-s sec]\n"
+	    fprintf( stderr,
+		"Use: \\go [-d display] [-e] [-h] [-f] [-l] [-n] [-p fd] [-m mode] [-s sec]\n"
 		"          [-t [filter]] [-w width] [-x [xgeom]] [-T title] [xacts]\n"
 		"     -d display  When used with -x, send result to named display\n"
 		"     -e          Echo SQL buffer to output\n"
@@ -238,7 +251,9 @@ int cmd_go( argc, argv )
 		"     -f          Suppress footers\n"
 		"     -l          Suppress line separators with pretty style output mode\n"
 		"     -n          Do not expand variables\n"
-		"     -p          Report runtime statistics\n"
+		"     -p out|err|none\n"
+		"                 Report runtime statistics to stdout, stderr, or nowhere\n"
+		"                 Overrides the $statistics variable\n"
 		"     -m mode     Switch display mode for result set\n"
 		"     -s sec      Sleep sec seconds between transactions\n"
 		"     -t [filter] Filter SQL through program\n"
@@ -333,7 +348,7 @@ int cmd_go( argc, argv )
 	 * If the user didn't request for statistics via the flag, but
 	 * they did through the variable, then pretend they used the flag.
 	 */
-	if( show_stats == False && (statistics != NULL && *statistics == '1') )
+	if( stats_stream != NULL && (statistics != NULL && *statistics == '1') )
 		show_stats = True;
 
 	if( !(dsp_flags & DSP_F_NOHEADERS) && headers   != NULL && *headers   == '0' )
@@ -572,8 +587,8 @@ int cmd_go( argc, argv )
 			printf( "%d xact%s:\n", iterations, (iterations > 1) ? "s" : "" );
 
 		fprintf(
-			stderr,
-			"Clock Time (sec.): Total = %.3f  Avg = %.3f (%4.2f xacts per sec.)\n",
+			stats_stream,
+			"# Clock Time (sec.): Total = %.3f  Avg = %.3f (%4.2f xacts per sec.)\n",
 			total_runtime,
 			(total_runtime / (double)iterations),
 			((double)1.0) / (total_runtime / (double)iterations));

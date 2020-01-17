@@ -1621,11 +1621,13 @@ be turned off via the B<$nosepline> variable.
 Turns off variable expansion in the B<Work Buffer> prior to sending it to the
 server, this may also be turned off via the B<$expand> variable.
 
-=item -p
+=item -p out|err|none
 
-Turns on output of performance statistics when the result set has been
-successfully returned from the server. This may also be turned on via the B<-p>
-command line argument to sqsh, or the B<$statistics> variable.
+Output performance statistics to the given stream (stdout or stderr) when the
+result set has been successfully returned from the server. This may also be
+turned on via the B<-p> command line argument to sqsh, or the B<$statistics>
+variable, in which case the statistics will be written to stdout. If the
+argument is "none" then no statistics will be written.
 
 =item -s sec
 
