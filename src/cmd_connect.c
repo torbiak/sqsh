@@ -1715,7 +1715,7 @@ static CS_RETCODE syb_server_cb (ctx, con, msg)
                  * Otherwise, it is just an informational (e.g. print) message
                  * from the server, so send it to stdout.
                  */
-                dest_fp = (p2fstat == True) ? g_p2f_fp : stdout;
+                dest_fp = (p2fstat == True) ? g_p2f_fp : stderr;
                 wrap_print( dest_fp, msg->text );
                 fflush( dest_fp );
             }
