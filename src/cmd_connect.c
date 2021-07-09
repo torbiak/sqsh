@@ -1901,7 +1901,7 @@ static CS_RETCODE SetNetAuth (conn, principal, keytab_file, secmech, req_options
     CS_CHAR       *req_options;
 {
 
-#if defined(CS_SEC_NETWORKAUTH)
+#if defined(CS_SEC_NETWORKAUTH) && 0
 
     CS_CHAR buf[CS_MAX_CHAR+1];
     CS_INT  buflen;
@@ -2077,7 +2077,7 @@ static CS_RETCODE ShowNetAuthCredExp (conn, cmdname)
     CS_CONNECTION *conn;
     CS_CHAR       *cmdname;
 {
-#if defined(CS_SEC_NETWORKAUTH)
+#if defined(CS_SEC_NETWORKAUTH) && 0
     CS_INT     CredTimeOut;
     CS_BOOL    NETWORKAUTH;
     char      *datetime;
